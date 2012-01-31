@@ -1,0 +1,78 @@
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	width: 100%;
+}
+
+#left_bar {
+	display: block;
+	height: 100%;
+	width: 200px;
+	background: #E0E8FF;
+	float: left;
+	border-right: 1px solid #D0D8EF;
+	background: #E0E8FF url('../img/left_bar_gradient.png') repeat-y;
+	background-position: right;
+}
+
+#content {
+	display: block;
+	float: left;
+	margin-top: 4px;
+}
+
+.room {
+	display: block;
+	width: 600px;
+	padding: 0px 8px;
+}
+
+.room-title {
+	color: #404040;
+	border-bottom: 1px solid #E0E0E0;
+}
+
+.room input {
+	width: 100%;
+	border: 1px;
+	background: #FAFAFA;
+	font-size: 1.2em;
+}
+
+#rooms_list {
+	padding-top: 10px;
+}
+
+.room-row a, .room-row a:visited {
+	display: block;
+	padding: 10px 10px;
+	width: 180px;
+	
+	text-decoration: none;
+	color: #101825;
+	font-family: sans-serif;
+	text-shadow: 0px 2px 2px #FFF;
+	
+	border-top: 1px solid #F0F8FF;
+	border-bottom: 1px solid #C0C8DF;
+}
+
+.room-row a:hover, .room-row a:active{
+	background-color: rgba(200,220,255,0.5);
+}
+
+.room-row a.active, .room-row a.active:visited {
+	border-top: 1px solid #E0E8FF;
+	background-color: rgba(180,200,240,0.5);
+}
+
+.room-row a.active:hover, .room-row a.active:active{
+	background-color: rgba(170,190,230,0.5);
+}
+
+.message-origin {
+	font-weight: bold;
+}

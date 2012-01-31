@@ -9,9 +9,13 @@ require.config({
     jquery: "../assets/js/libs/jquery",
     underscore: "../assets/js/libs/underscore",
     backbone: "../assets/js/libs/backbone",
+    io: "/socket.io/socket.io",
 
     // Shim Plugin
-    use: "../assets/js/plugins/use"
+    use: "../assets/js/plugins/use",
+        
+    // Text Plugin
+    text: "../assets/js/plugins/text"
   },
 
   use: {
@@ -32,12 +36,13 @@ require([
   // Libs
   "jquery",
   "use!backbone",
+  "io",
 
   // Modules
-  "modules/example"
+  "modules/home"
 ],
 
-function (namespace, jQuery, Backbone, Example) {
+function (namespace, jQuery, Backbone, Io, Home) {
   // Treat the jQuery ready function as the entry point to the application.
   // Inside this function, kick-off all initialization, everything up to this
   // point should be definitions.
@@ -49,30 +54,14 @@ function (namespace, jQuery, Backbone, Example) {
     // Defining the application router, you can attach sub routers here.
     var Router = Backbone.Router.extend({
       routes: {
-        "": "index",
-        ":hash": "index"
+        "": "index"
       },
 
-      index: function(hash) {
+      index: function() {
         var route = this;
-        var tutorial = new Example.Views.Tutorial();
 
-        // Attach the tutorial to the DOM
-        tutorial.render(function(el) {
-          $("#main").html(el);
-
-          // Fix for hashes in pushState and hash fragment
-          if (hash && !route._alreadyTriggered) {
-            // Reset to home, pushState support automatically converts hashes
-            Backbone.history.navigate("", false);
-
-            // Trigger the default browser behavior
-            location.hash = hash;
-
-            // Set an internal flag to stop recursive looping
-            route._alreadyTriggered = true;
-          }
-        });
+        var home = new Home.Model();
+        var home_view = new Home.Views.Main({"model": home});
       }
     });
     

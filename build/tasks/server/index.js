@@ -14,7 +14,7 @@ task.registerTask("server", "Run development server.", function(prop) {
     favicon: "./favicon.ico",
     index: "./index.html",
 
-    port: 8000,
+    port: 8080,
     host: "127.0.0.1"
   });
 
@@ -73,6 +73,18 @@ task.registerHelper("server", function(options) {
   // Ensure all routes go home, client side app..
   site.get("*", function(req, res) {
     fs.createReadStream(options.index).pipe(res);
+  });
+  
+  // Get ready for sockets
+  var io = require('socket.io').listen(site);
+
+  io.sockets.on('connection', function(socket) {
+    socket.on('user_message', function(data) {
+
+      console.log('Message for Room ' + data.room_id + ': ' + data.msg);
+
+      io.sockets.emit('world_message', data)
+    });
   });
 
   // Actually listen
