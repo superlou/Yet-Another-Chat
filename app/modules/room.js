@@ -38,7 +38,6 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 	      				sent_at: data.sent_at 
 	      			});	
       				self.get('messages').add(msg);
-	  				console.log(self.get('messages'));
       			}
       		});
 		}
