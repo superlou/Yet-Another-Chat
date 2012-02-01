@@ -53,7 +53,7 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 
 		set_active: function(model_to_activate) {			
 			_.each(this.models, function(room) {
-				//room.set({is_active: false});	// STUPID BUG HERE??
+				room.set({is_active: false});
 			})
 
 			model_to_activate.set({is_active: true});
