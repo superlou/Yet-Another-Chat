@@ -26,7 +26,7 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 		},
 
 		listen_for_messages: function() {
-			var socket_url = 'http://localhost/'
+			var socket_url = document.domain;
 			this.set({socket: io.connect(socket_url)});
 
 			var self = this;
