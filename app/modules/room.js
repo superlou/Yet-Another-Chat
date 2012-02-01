@@ -32,11 +32,7 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 			var self = this;
       		this.get('socket').on('world_message', function(data) {
       			if (data.room_id === self.get('id')) {
-      				var msg = new Message.Model({
-      					origin: data.origin,
-	      				text: data.msg,
-	      				sent_at: data.sent_at 
-	      			});	
+      				var msg = new Message.Model(data);	
       				self.get('messages').add(msg);
       			}
       		});
@@ -72,11 +68,11 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 		initialize: function() {
 			_.bindAll(this, 'render', 'attend_room', 'open_room');
 
-			this.model.bind('change', this.render, this);
+			this.model.on('change', this.render, this);
 		},
 
 		render: function() {
-			$(this.el).html(this.template({room: this.model}));
+			this.$el.html(this.template({room: this.model}));
 			return this;
 		},
 
@@ -116,24 +112,24 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 			message_collection.bind('add', this.add_one, this);
 			
 			var self = this;
-			this.model.bind('change', function() {
+			this.model.on('change', function() {
 				if (self.model.get('is_active') == false) {
-					$(self.el).hide();
+					self.$el.hide();
 				} else {
-					$(self.el).show();
+					self.$el.show();
 				}
 			});
 	    },
 
 	    render: function() {
 	    	var template = _.template(room_tpl, {name: this.model.get('name')});
-			$(this.el).html(template);
+			this.$el.html(template);
 	    	return this;
 	    },
 
 	    add_one: function(message) {
 	    	var message_view = new Message.Views.Display({model: message});
-	    	$(this.el).find('.log').prepend(message_view.render().el);
+	    	this.$el.find('.log').prepend(message_view.render().el);
 	    },
 
 	    on_input_keydown: function(event_data) {
@@ -152,8 +148,9 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 	    	var timestamp = new Date().getTime();
 
 	    	socket.emit('user_message', {
-		    	room_id: id,
-		    	msg: text,
+	    		room_id: id,
+	    		origin: 'unknown',
+		    	text: text,
 		    	sent_at: timestamp
 		    });
 	    }

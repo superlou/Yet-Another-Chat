@@ -22,7 +22,8 @@ function(namespace, Backbone, Room, home_tpl) {
 			var room1 = new Room.Model({id: 'english', name: "English"});
 			var room2 = new Room.Model({id: 'japanese', name: "Japanese"});
 			var room3 = new Room.Model({id: 'chinese', name: "Chinese"});
-			this.get('rooms').add([room1, room2, room3]);
+			var room4 = new Room.Model({id: 'spanish', name: "Spanish"});
+			this.get('rooms').add([room1, room2, room3, room4]);
 		}
 	});
 
@@ -42,7 +43,7 @@ function(namespace, Backbone, Room, home_tpl) {
 
 		render: function() {
 			var template = _.template(home_tpl, {user: this.model.get('user')});
-			$(this.el).html(template);
+			this.$el.html(template);
 
 			_.each(this.model.get('rooms').models, function(room) {
 				var view = new Room.Views.RoomRow({model: room});

@@ -28,7 +28,7 @@ function(namespace, Backbone, message_tpl) {
 
 		render: function() {
 			var template = _.template(message_tpl);
-			$(this.el).html(template({msg: this.model}));
+			this.$el.html(template({msg: this.model}));
 
 			return this;
 		}

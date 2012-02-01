@@ -80,9 +80,6 @@ task.registerHelper("server", function(options) {
 
   io.sockets.on('connection', function(socket) {
     socket.on('user_message', function(data) {
-
-      console.log('Message for Room ' + data.room_id + ': ' + data.msg);
-
       io.sockets.emit('world_message', data)
     });
   });
