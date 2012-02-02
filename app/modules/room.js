@@ -29,8 +29,13 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 			var socket_url = document.domain;
 			this.set({socket: io.connect(socket_url)});
 
+			this.get('socket').emit('enter_room',{
+				user: 'guest', 
+				room: this.get('id')
+			});
+
 			var self = this;
-      		this.get('socket').on('world_message', function(data) {
+      		this.get('socket').on('room_message', function(data) {
       			if (data.room_id === self.get('id')) {
       				var msg = new Message.Model(data);	
       				self.get('messages').add(msg);
