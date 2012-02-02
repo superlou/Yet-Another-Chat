@@ -8,7 +8,7 @@ Last updated to https://github.com/tbranyen/backbone-boilerplate/commit/d19cc44d
 If someone knows a better way to merge in changes from another git project that's not really a fork, please let me know.
 
 ## Todo List ##
-~~1. Rooms should use socket.io rooms to filter messages~~
+1. ~~rooms should use socket.io rooms to filter messages~~
 2. Some sort of user model
 3. Some sort of sessions
 4. Get the text input to the bottom of the screen, with messages moving upwards
