@@ -2,11 +2,12 @@ define([
   "namespace",
   "use!backbone",
   "modules/message",
+  "modules/user",
   "text!templates/room_tpl.html",
   "text!templates/room_row_tpl.html"
 ],
 
-function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
+function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 	var Room = namespace.module();
 
 	Room.Model = Backbone.Model.extend({
@@ -17,7 +18,8 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 			is_active: false,
 			needs_attention: false,
 			messages: '',
-			socket: ''
+			socket: '',
+			user: ''
 		},
 
 		initialize: function() {
@@ -154,7 +156,7 @@ function(namespace, Backbone, Message, room_tpl, room_row_tpl) {
 
 	    	socket.emit('user_message', {
 	    		room_id: id,
-	    		origin: 'unknown',
+	    		origin: this.model.get('user').get('name'),
 		    	text: text,
 		    	sent_at: timestamp
 		    });

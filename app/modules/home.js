@@ -2,15 +2,16 @@ define([
 	"namespace",
 	"use!backbone",
 	"modules/room",
+	"modules/user",
 	"text!templates/home_tpl.js"
 ],
 
-function(namespace, Backbone, Room, home_tpl) {
+function(namespace, Backbone, Room, User, home_tpl) {
 	var Home = namespace.module();
 
 	Home.Model = Backbone.Model.extend({
 		defaults: {
-			"user": "guest",
+			"user": new User.Model(),
 			"rooms": '',
 			"socket": ''
 		},
@@ -23,6 +24,12 @@ function(namespace, Backbone, Room, home_tpl) {
 			var room2 = new Room.Model({id: 'japanese', name: "Japanese"});
 			var room3 = new Room.Model({id: 'chinese', name: "Chinese"});
 			var room4 = new Room.Model({id: 'spanish', name: "Spanish"});
+
+			var self = this;
+			_.each([room1, room2, room3, room4], function(room) {
+				room.set({user: self.get('user')});
+			});
+
 			this.get('rooms').add([room1, room2, room3, room4]);
 		}
 	});

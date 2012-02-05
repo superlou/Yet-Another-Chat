@@ -53,6 +53,17 @@ task.registerHelper("server", function(options) {
 	var express = require("express");
 	var site = express.createServer();
 
+	site.use(express.bodyParser());
+
+	// Set up session store
+	site.use(express.cookieParser());
+
+	var MemStore = express.session.MemoryStore; // ONLY FOR DEVELOPMENT!
+
+	site.use(express.session({secret: "apples", store: MemStore({
+		reapInterval: 60000*10
+	})}));
+
 	// Map static folders
 	Object.keys(options.folders).sort().reverse().forEach(function(key) {
 		site.use("/" + key, express.static(options.folders[key]));
@@ -71,7 +82,18 @@ task.registerHelper("server", function(options) {
 	site.use(express.favicon(options.favicon));
 
 	// Ensure all routes go home, client side app..
-	site.get("*", function(req, res) {
+
+	site.get('/session/username.json', function(req, res) {
+		res.json({username: req.session.username});
+	});
+
+	site.post('/session/request_username.json', function(req,res) {
+		var requested_username = req.body.username;
+		req.session.username = requested_username;
+		res.json({username: requested_username});
+	});
+
+	site.get("*", function(req, res) {	// MUCKED WITH THIS TO MESS WITH SESSION
 		fs.createReadStream(options.index).pipe(res);
 	});
 	

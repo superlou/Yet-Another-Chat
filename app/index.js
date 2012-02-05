@@ -39,10 +39,11 @@ require([
   "io",
 
   // Modules
-  "modules/home"
+  "modules/home",
+  "modules/user"
 ],
 
-function (namespace, jQuery, Backbone, Io, Home) {
+function (namespace, jQuery, Backbone, Io, Home, User) {
   // Treat the jQuery ready function as the entry point to the application.
   // Inside this function, kick-off all initialization, everything up to this
   // point should be definitions.
@@ -54,14 +55,27 @@ function (namespace, jQuery, Backbone, Io, Home) {
     // Defining the application router, you can attach sub routers here.
     var Router = Backbone.Router.extend({
       routes: {
-        "": "index"
+        "": "index",
+        "login": "login"
       },
 
       index: function() {
         var route = this;
 
-        var home = new Home.Model();
-        var home_view = new Home.Views.Main({"model": home});
+        $.get('/session/username.json', function(data) {
+          if (data.username) {
+            var user = new User.Model({name: data.username});
+            var home = new Home.Model({user: user});
+            var home_view = new Home.Views.Main({model: home});         
+          } else {
+           window.location.replace('/login');
+          }
+        });
+      },
+
+      login: function() {
+        var user = new User.Model();
+        var user_login_view = new User.Views.Login({model: user});
       }
     });
     

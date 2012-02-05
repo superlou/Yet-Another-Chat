@@ -9,10 +9,12 @@ If someone knows a better way to merge in changes from another git project that'
 
 ## Todo List ##
 1. ~~rooms should use socket.io rooms to filter messages~~
-2. Some sort of user model
-3. Some sort of sessions
+2. ~~Some sort of user model~~
+3. ~~Some sort of sessions~~
 4. Get the text input to the bottom of the screen, with messages moving upwards
 5. Room tab should indicate missed messages
 6. Listing users in rooms
 7. Indication of users typing
 8. Adding custom rooms
+
+Note: This is a list of various technologies I'd like to try out.  Just because they're crossed off doesn't mean they're down well.  In fact, it almost gaurantees they were done hastily and half-bakes so I could get that sweet, sweet rush of crossing something off a list.
