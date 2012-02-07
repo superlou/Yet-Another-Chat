@@ -136,7 +136,7 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 
 	    add_one: function(message) {
 	    	var message_view = new Message.Views.Display({model: message});
-	    	this.$el.find('.log').prepend(message_view.render().el);
+	    	this.$el.find('.log').append(message_view.render().el);
 	    },
 
 	    on_input_keydown: function(event_data) {
