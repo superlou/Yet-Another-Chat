@@ -51,6 +51,7 @@ body {
 	bottom: 0px;
 	width: 100%;
 	background: #FAFAFA;
+	border-top: 1px solid #E0E0E0;
 }
 
 .input-padding {
@@ -107,6 +108,24 @@ body {
 
 .room-row a.active:hover, .room-row a.active:active{
 	background-color: rgba(170,190,230,0.5);
+}
+
+.room-status {
+	float: right;
+	min-width: 16px;
+	height: 12px;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 4px;
+	padding-bottom: 2px;
+	position: relative;
+	top: -2px;
+	background: white;
+	text-align: center;
+	border-radius: 12px;
+	color: gray;
+	font-size: 10px;
+	box-shadow:inset 0px 2px 4px #E0E0E0;
 }
 
 .message-origin {

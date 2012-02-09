@@ -1,3 +1,13 @@
-<a class="<%= room.get("is_active") ? "active" : "" %>" href=#>
+<a class="<%= room.get("is_attended") ? "active" : "" %>" href=#>
 	<%= room.get("name") %>
+
+	<% if (room.get("is_open")) { %>
+	<div class="room-status">
+		<span>
+			<% if (room.get("missed_message_count") > 0) {%>
+			<%= room.get("missed_message_count") %>
+			<% } %>
+		</span>
+	</div>
+	<% } %>
 </a>

@@ -15,15 +15,16 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 			id: 0,
 			name: "Default Room",
 			is_open: false,
-			is_active: false,
+			is_attended: false,
 			needs_attention: false,
+			missed_message_count: 0,
 			messages: '',
 			socket: '',
 			user: ''
 		},
 
 		initialize: function() {
-			_.bindAll(this,'listen_for_messages');
+			_.bindAll(this,'listen_for_messages', 'read_messages');
 			this.set({messages: new Message.Collection()});
 		},
 
@@ -41,8 +42,17 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
       			if (data.room_id === self.get('id')) {
       				var msg = new Message.Model(data);	
       				self.get('messages').add(msg);
+
+      				if (!self.get('is_attended')) {
+      					count = self.get('missed_message_count') + 1;
+      					self.set({missed_message_count: count});
+      				}
       			}
       		});
+		},
+
+		read_messages: function() {
+			this.set({missed_message_count: 0});
 		}
 	});
 
@@ -55,10 +65,10 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 
 		set_active: function(model_to_activate) {			
 			_.each(this.models, function(room) {
-				room.set({is_active: false});
+				room.set({is_attended: false});
 			})
 
-			model_to_activate.set({is_active: true});
+			model_to_activate.set({is_attended: true});
 		}
 	});
 
@@ -94,6 +104,7 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 
 			$log = $('.log-container');
 	    	$log.prop({ scrollTop: $log.prop("scrollHeight") });
+	    	this.model.read_messages();
 		},
 
 		open_room: function() {
@@ -124,7 +135,7 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 			
 			var self = this;
 			this.model.on('change', function() {
-				if (self.model.get('is_active') == false) {
+				if (self.model.get('is_attended') == false) {
 					self.$el.hide();
 				} else {
 					self.$el.show();
