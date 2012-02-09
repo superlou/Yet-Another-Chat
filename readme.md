@@ -18,4 +18,8 @@ If someone knows a better way to merge in changes from another git project that'
 8. Adding custom rooms
 9. Use MongoDB instead of Memory Store for sessions
 
-Note: This is a list of various technologies I'd like to try out.  Just because they're crossed off doesn't mean they're done well.  In fact, it almost gaurantees they were done hastily and half-bakes so I could get that sweet, sweet rush of crossing something off a list.
+Note: This is a list of various technologies I'd like to try out.  Just because they're crossed off doesn't mean they're down well.  In fact, it almost gaurantees they were done hastily and half-bakes so I could get that sweet, sweet rush of crossing something off a list.
+
+## Login System Description ##
+Guest account available by default.  Allows changing username, adding descriptors, rooms, etc., but nothing is stored.
+If desired, can create a login which remembers settings.  Still should allow changing usernames (so should be identified by ID rather than name).
