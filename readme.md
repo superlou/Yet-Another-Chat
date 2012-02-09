@@ -11,7 +11,7 @@ If someone knows a better way to merge in changes from another git project that'
 1. ~~rooms should use socket.io rooms to filter messages~~
 2. ~~Some sort of user model~~
 3. ~~Some sort of sessions~~
-4. Get the text input to the bottom of the screen, with messages moving upwards
+4. ~~Get the text input to the bottom of the screen, with messages moving upwards~~
 5. Room tab should indicate missed messages
 6. Listing users in rooms
 7. Indication of users typing

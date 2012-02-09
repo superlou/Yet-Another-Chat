@@ -91,6 +91,9 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 			}
 
 			$('input').focus();
+
+			$log = $('.log-container');
+	    	$log.prop({ scrollTop: $log.prop("scrollHeight") });
 		},
 
 		open_room: function() {
@@ -113,7 +116,8 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 		},
 
 	    initialize: function() {
-      		_.bindAll(this,'render','on_input_keydown', 'send_message','add_one');
+      		_.bindAll(this,'render','on_input_keydown', 'send_message','add_one',
+      					'scroll_to_bottom');
 
 			var message_collection = this.model.get('messages');
 			message_collection.bind('add', this.add_one, this);
@@ -131,12 +135,20 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 	    render: function() {
 	    	var template = _.template(room_tpl, {name: this.model.get('name')});
 			this.$el.html(template);
+			this.scroll_to_bottom();
 	    	return this;
 	    },
 
 	    add_one: function(message) {
 	    	var message_view = new Message.Views.Display({model: message});
 	    	this.$el.find('.log').append(message_view.render().el);
+
+	    	this.scroll_to_bottom();
+	    },
+
+	    scroll_to_bottom: function() {
+	    	$log = this.$el.find('.log-container');
+	    	$log.prop({ scrollTop: $log.prop("scrollHeight") });
 	    },
 
 	    on_input_keydown: function(event_data) {

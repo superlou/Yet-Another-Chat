@@ -4,6 +4,7 @@ html {
 
 body {
 	height: 100%;
+	overflow: hidden;
 }
 
 #container {
@@ -64,14 +65,21 @@ body {
 	outline: 0px;
 }
 
-#rooms_list {
-	padding-top: 10px;
+.log-container {
+	overflow: auto;
+	position: absolute;
+	top: 20px;
+	bottom: 56px;
+	width: 100%;
+	font-size: 1.2em;
 }
 
 .log {
-	overflow: auto;
-	height: 100%;
-	margin-bottom: -200px;
+	padding: 0px 4px;
+}
+
+#rooms_list {
+	padding-top: 10px;
 }
 
 .room-row a, .room-row a:visited {
