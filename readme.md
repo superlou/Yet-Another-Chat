@@ -17,6 +17,9 @@ If someone knows a better way to merge in changes from another git project that'
 7. Indication of users typing
 8. Adding custom rooms
 9. Use MongoDB instead of Memory Store for sessions
+10. Implement the login system descibed below
+11. Allow customization of room fonts
+12. Internationalization?
 
 Note: This is a list of various technologies I'd like to try out.  Just because they're crossed off doesn't mean they're down well.  In fact, it almost gaurantees they were done hastily and half-bakes so I could get that sweet, sweet rush of crossing something off a list.
 
