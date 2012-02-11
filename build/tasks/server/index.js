@@ -49,6 +49,7 @@ task.registerTask("server", "Run development server.", function(prop) {
 
 task.registerHelper("server", function(options) {
 	// Require libraries
+	var _ = require('underscore')._;
 	var fs = require("fs");
 	var express = require("express");
 	var site = express.createServer();
@@ -58,11 +59,14 @@ task.registerHelper("server", function(options) {
 	// Set up session store
 	site.use(express.cookieParser());
 
-	var MemStore = express.session.MemoryStore; // ONLY FOR DEVELOPMENT!
+	var MongoStore = require('connect-mongo');
 
-	site.use(express.session({secret: "apples", store: MemStore({
-		reapInterval: 60000*10
-	})}));
+	site.use(express.session({
+		secret: 'apples', 
+		store: new MongoStore({
+			db: 'chat'
+		})
+	}));
 
 	// Map static folders
 	Object.keys(options.folders).sort().reverse().forEach(function(key) {
@@ -93,7 +97,7 @@ task.registerHelper("server", function(options) {
 		res.json({username: requested_username});
 	});
 
-	site.get("*", function(req, res) {	// MUCKED WITH THIS TO MESS WITH SESSION
+	site.get("*", function(req, res) {
 		fs.createReadStream(options.index).pipe(res);
 	});
 	
@@ -103,10 +107,22 @@ task.registerHelper("server", function(options) {
 	io.sockets.on('connection', function(socket) {
 		socket.on('enter_room', function(data) {
 			socket.join(data.room);
+
+			// Build a list of usernames in a room
+			_.each(io.sockets.clients(data.room), function(socket) {
+				socket.get('username', function(err, username) {
+					console.log(username);
+				});
+			});
 		});
 
 		socket.on('user_message', function(data) {
 			io.sockets.in(data.room_id).emit('room_message', data);
+		});
+
+		socket.on('set_username', function(data) {
+			socket.set('username', data);
+
 		});
 	});
 

@@ -19,6 +19,7 @@ function(namespace, Backbone, Room, User, home_tpl) {
 		initialize: function() {
 			this.set({rooms: new Room.Collection()});
 			this.set({socket: io.connect(document.domain)});
+			this.get('socket').emit('set_username', this.get('user').get('name'));
 
 			var room1 = new Room.Model({id: 'english', name: "English"});
 			var room2 = new Room.Model({id: 'japanese', name: "Japanese"});
