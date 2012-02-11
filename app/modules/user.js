@@ -61,6 +61,7 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl) {
 
 	User.Views.Attendee = Backbone.View.extend({
 		class: 'attendee',
+		template: "app/templates/attendee_tpl.html",
 
 		initialize: function() {
 			_.bindAll(this,'render','unrender');

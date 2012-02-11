@@ -29,7 +29,11 @@ config.init({
   },
 
   mincss: {
-    "dist/release/style.css": ["assets/css/**/*.css"]
+    "dist/release/index.css": [
+      "assets/css/style.css",
+      "assets/css/reset.css",
+      "assets/css/chat_styles.css"
+    ]
   },
 
   min: {

@@ -3,7 +3,7 @@ Yet Another Chat App
 
 This is based on tbranyen's excellent [boiler-plate](https://github.com/tbranyen/backbone-boilerplate/tree/amd) for NodeJS/Backbone projects.  I suggest everybody use that so I can have more people to ask questions of.
 
-Last updated to "updated underscore..." from 4/6/12, 026eb4fcbcffed665e6b71dce2cb1a1ca4e4f976
+Last updated to "added stylesheet loading..." from 2/6/12, 5733e10572c51f034882260bee0c936c5d57675a
 
 If someone knows a better way to merge in changes from another git project that's not really a fork, please let me know.
 
