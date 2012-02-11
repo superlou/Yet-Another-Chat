@@ -9,7 +9,10 @@ require.config({
     jquery: "../assets/js/libs/jquery",
     underscore: "../assets/js/libs/underscore",
     backbone: "../assets/js/libs/backbone",
+    layout: "../assets/js/libs/jquery.layout.min",
+    ui: "../assets/js/libs/jquery-ui",
     io: "/socket.io/socket.io",
+    slimscroll: "../assets/js/libs/slimScroll",
 
     // Shim Plugin
     use: "../assets/js/plugins/use",
@@ -26,6 +29,18 @@ require.config({
 
     underscore: {
       attach: "_"
+    },
+
+    slimscroll: {
+      deps: ["jquery","use!ui"]
+    },
+
+    layout: {
+      deps: ["jquery", "use!ui"]
+    },
+
+    ui: {
+      deps: ["jquery"]
     }
   }
 });

@@ -71,12 +71,23 @@ body {
 	position: absolute;
 	top: 20px;
 	bottom: 56px;
-	width: 100%;
+	left: 0px;
+	right: 200px;
 	font-size: 1.2em;
 }
 
 .log {
 	padding: 0px 4px;
+	word-wrap: break-word;
+}
+
+.attendees-container {
+	float: right;
+	width: 200px;
+}
+
+.attendees {
+	padding: 10px;
 }
 
 #rooms_list {
@@ -130,4 +141,11 @@ body {
 
 .message-origin {
 	font-weight: bold;
+}
+
+.small-title {
+	font-size: 0.6em;
+	text-transform: uppercase;
+	padding-bottom: 4px;
+	color: #A0A0A0;
 }

@@ -20,12 +20,14 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 			missed_message_count: 0,
 			messages: '',
 			socket: '',
-			user: ''
+			user: '',
+			attendees: ''
 		},
 
 		initialize: function() {
 			_.bindAll(this,'listen_for_messages', 'read_messages');
 			this.set({messages: new Message.Collection()});
+			this.set({attendees: new User.Collection()});
 		},
 
 		listen_for_messages: function() {
@@ -48,6 +50,32 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
       					self.set({missed_message_count: count});
       				}
       			}
+      		});
+
+      		this.get('socket').on('attendee_list', function(data) {
+      			if (data.room_id === self.get('id')) {
+	      			var attendees = [];
+
+	      			_.each(data.names, function(username) {
+	      				var attendee = new User.Model({name: username});
+	      				attendees.push(attendee);
+	      			})
+
+	      			self.get('attendees').reset(attendees);	
+      			}
+      		});
+
+      		this.get('socket').on('attendee_join', function(data) {
+      			if (data.room_id === self.get('id')) {
+      				var attendee = new User.Model({name: data.name});
+      				self.get('attendees').add(attendee);
+      			}
+      		});
+
+      		this.get('socket').on('attendee_disconnect', function(data) {
+  				var attendees_collection = self.get('attendees');
+  				var attendee = attendees_collection.find_by_name(data.name);
+  				attendees_collection.remove(attendee);
       		});
 		},
 
@@ -127,11 +155,15 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 		},
 
 	    initialize: function() {
-      		_.bindAll(this,'render','on_input_keydown', 'send_message','add_one',
-      					'scroll_to_bottom');
+      		_.bindAll(this,'render','on_input_keydown', 'send_message','add_one_message',
+      					'scroll_to_bottom', 'reset_attendees', 'add_one_attendee');
 
 			var message_collection = this.model.get('messages');
-			message_collection.bind('add', this.add_one, this);
+			message_collection.bind('add', this.add_one_message, this);
+
+			var attendee_collection = this.model.get('attendees');
+			attendee_collection.bind('reset', this.reset_attendees, this);
+			attendee_collection.bind('add', this.add_one_attendee, this);
 			
 			var self = this;
 			this.model.on('change', function() {
@@ -150,11 +182,22 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 	    	return this;
 	    },
 
-	    add_one: function(message) {
+	    add_one_message: function(message) {
 	    	var message_view = new Message.Views.Display({model: message});
 	    	this.$el.find('.log').append(message_view.render().el);
-
 	    	this.scroll_to_bottom();
+	    },
+
+	    reset_attendees: function(attendees) {
+	    	var self = this;
+	    	_.each(attendees.models, function(attendee) {
+	    		self.add_one_attendee(attendee);
+	    	});
+	    },
+
+	    add_one_attendee: function(attendee) {
+	    	var attendee_view = new User.Views.Attendee({model: attendee});
+	    	this.$el.find('.attendees').append(attendee_view.render().el);
 	    },
 
 	    scroll_to_bottom: function() {
