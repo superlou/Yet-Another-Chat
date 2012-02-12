@@ -3,7 +3,7 @@ Yet Another Chat App
 
 This is based on tbranyen's excellent [boiler-plate](https://github.com/tbranyen/backbone-boilerplate/tree/amd) for NodeJS/Backbone projects.  I suggest everybody use that so I can have more people to ask questions of.
 
-Last updated to "lots of documentation..." from 2/7/12, f6138210c51195c4756bc662efe875b7c553b47a
+Last updated to "patched grunt..." from 2/7/12, f5af5033297d2b4fda942de48bf8657fa5bea0f7
 
 If someone knows a better way to merge in changes from another git project that's not really a fork, please let me know.
 

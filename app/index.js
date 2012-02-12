@@ -59,40 +59,39 @@ require([
 ],
 
 function (namespace, jQuery, Backbone, Io, Home, User) {
+  // Defining the application router, you can attach sub routers here.
+  var Router = Backbone.Router.extend({
+    routes: {
+      "": "index",
+      "login": "login"
+    },
+
+    index: function() {
+      var route = this;
+
+      $.get('/session/username.json', function(data) {
+        if (data.username) {
+          var user = new User.Model({name: data.username});
+          var home = new Home.Model({user: user});
+          var home_view = new Home.Views.Main({model: home});         
+        } else {
+         window.location.replace('/login');
+        }
+      });
+    },
+
+    login: function() {
+      var user = new User.Model();
+      var user_login_view = new User.Views.Login({model: user});
+    }
+  });
+
   // Treat the jQuery ready function as the entry point to the application.
   // Inside this function, kick-off all initialization, everything up to this
   // point should be definitions.
   jQuery(function($) {
-
     // Shorthand the application namespace
     var app = namespace.app;
-
-    // Defining the application router, you can attach sub routers here.
-    var Router = Backbone.Router.extend({
-      routes: {
-        "": "index",
-        "login": "login"
-      },
-
-      index: function() {
-        var route = this;
-
-        $.get('/session/username.json', function(data) {
-          if (data.username) {
-            var user = new User.Model({name: data.username});
-            var home = new Home.Model({user: user});
-            var home_view = new Home.Views.Main({model: home});         
-          } else {
-           window.location.replace('/login');
-          }
-        });
-      },
-
-      login: function() {
-        var user = new User.Model();
-        var user_login_view = new User.Views.Login({model: user});
-      }
-    });
     
     // Define your master router on the application namespace and trigger all
     // navigation from this instance.
@@ -122,6 +121,6 @@ function (namespace, jQuery, Backbone, Io, Home, User) {
         app.router.navigate(href, true);
       }
     });
-
   });
+  
 });
