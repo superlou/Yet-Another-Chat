@@ -22,7 +22,7 @@ If someone knows a better way to merge in changes from another git project that'
 12. Internationalization?
 13. Automatic room creation for trending twitter topics
 
-Note: This is a list of various technologies I'd like to try out.  Just because they're crossed off doesn't mean they're down well.  In fact, it almost gaurantees they were done hastily and half-bakes so I could get that sweet, sweet rush of crossing something off a list.
+Note: This is a list of various technologies I'd like to try out.  Just because they're crossed off doesn't mean they're down well.  In fact, it almost gaurantees they were done hastily and half-baked so I could get that sweet, sweet rush of crossing something off a list.
 
 ## Login System Description ##
 Guest account available by default.  Allows changing username, adding descriptors, rooms, etc., but nothing is stored.
