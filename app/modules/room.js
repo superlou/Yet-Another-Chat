@@ -3,11 +3,12 @@ define([
   "use!backbone",
   "modules/message",
   "modules/user",
+  "use!slimscroll",
   "text!templates/room_tpl.html",
   "text!templates/room_row_tpl.html"
 ],
 
-function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
+function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl) {
 	var Room = namespace.module();
 
 	Room.Model = Backbone.Model.extend({
@@ -130,7 +131,7 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 
 			$('input').focus();
 
-			$log = $('.log-container');
+			$log = $('.log');
 	    	$log.prop({ scrollTop: $log.prop("scrollHeight") });
 	    	this.model.read_messages();
 		},
@@ -178,6 +179,11 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 	    render: function() {
 	    	var template = _.template(room_tpl, {name: this.model.get('name')});
 			this.$el.html(template);
+			this.$el.find(".log").slimScroll({  	// Problems with updating slimScroll
+				height: "100%",						// on dynamic content addition
+				railVisible: true,
+				start: 'bottom'
+			});
 			this.scroll_to_bottom();
 	    	return this;
 	    },
@@ -201,7 +207,7 @@ function(namespace, Backbone, Message, User, room_tpl, room_row_tpl) {
 	    },
 
 	    scroll_to_bottom: function() {
-	    	$log = this.$el.find('.log-container');
+	    	$log = this.$el.find('.log');
 	    	$log.prop({ scrollTop: $log.prop("scrollHeight") });
 	    },
 
