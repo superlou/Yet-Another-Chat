@@ -58,7 +58,8 @@ require([
   "modules/user"
 ],
 
-function (namespace, jQuery, Backbone, Io, Home, User) {
+function(namespace, jQuery, Backbone, Io, Home, User) {
+  
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
     routes: {
