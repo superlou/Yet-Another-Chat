@@ -8,6 +8,9 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl) {
 	var User = namespace.module();
 
 	User.Model = Backbone.Model.extend({
+		idAttribute: '_id',
+		urlRoot: 'users',
+
 		defaults: {
 			name: 'Guest'
 		}
@@ -66,7 +69,7 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl) {
 		initialize: function() {
 			_.bindAll(this,'render','unrender');
 
-			this.model.bind('change', this.unrender);
+			this.model.bind('change', this.render);
 			this.model.bind('remove', this.unrender);
 		},
 
@@ -79,7 +82,18 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl) {
 		unrender: function() {
 			this.$el.remove();
 		}
-	})
+	});
+
+	User.Views.ActiveUser = Backbone.View.extend({
+
+		initialize: function() {
+			_.bindAll(this,'render');			
+		},
+
+		render: function() {
+			
+		}
+	});
 
 	return User;
 });

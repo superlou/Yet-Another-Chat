@@ -52,21 +52,35 @@ task.registerHelper("server", function(options) {
 	var _ = require('underscore')._;
 	var fs = require("fs");
 	var express = require("express");
-	var site = express.createServer();
+	var namer = require("./namer");
+	var async = require("async");
 
+	var site = express.createServer();
 	site.use(express.bodyParser());
 
 	// Set up session store
 	site.use(express.cookieParser());
-
 	var MongoStore = require('connect-mongo');
-
 	site.use(express.session({
 		secret: 'apples', 
 		store: new MongoStore({
 			db: 'chat'
 		})
 	}));
+
+	// Set up Mongoose
+	var mongoose = require('mongoose');
+	var Schema = mongoose.Schema;
+	var ObjectId = Schema.ObjectId;
+
+	var UserSchema = new Schema({
+		id: ObjectId,
+		name: String,
+		registered: Boolean
+	});
+	var User = mongoose.model('User', UserSchema);
+
+	mongoose.connect('mongodb://localhost/chat');
 
 	// Map static folders
 	Object.keys(options.folders).sort().reverse().forEach(function(key) {
@@ -85,18 +99,47 @@ task.registerHelper("server", function(options) {
 	// Serve favicon.ico
 	site.use(express.favicon(options.favicon));
 
-	// Ensure all routes go home, client side app..
+	// Handle client-helper routes
+	site.get('/session/new', function(req, res) {
+		// Generate a unique, random nickname for this unregistered user
+		var name_is_unique = false;
+		var name = namer.generate();	// @todo make sure the name is unique
 
-	site.get('/session/username.json', function(req, res) {
-		res.json({username: req.session.username});
+		// Log this unregistered user in the users collection
+		var user = new User();
+		user.name = name;
+		user.registered = false;
+		user.save();
+
+		// Store user_id in session
+		req.session.user_id = user._id;
+
+		// Respond with user_id
+		res.json({user: user});
 	});
 
-	site.post('/session/request_username.json', function(req,res) {
-		var requested_username = req.body.username;
-		req.session.username = requested_username;
-		res.json({username: requested_username});
+	site.get('/session/destroy', function(req, res) {
+		req.session.destroy();
+		res.json({});
 	});
 
+	site.get('/session/user_id', function(req,res) {
+		res.json({user_id: req.session.user_id});
+	});
+
+	site.get('/users/:id', function(req,res) {
+		async.series([
+			function(cb) {
+				User.find({_id: req.params.id}, function(err, docs) {
+					cb(err, docs);
+				})
+			}
+			], function(err, results) {
+				res.json(results[0][0]);
+			});
+	});
+
+	// Ensure all other routes go home for the client side app
 	site.get("*", function(req, res) {
 		fs.createReadStream(options.index).pipe(res);
 	});

@@ -64,26 +64,36 @@ function(namespace, jQuery, Backbone, Io, Home, User) {
   var Router = Backbone.Router.extend({
     routes: {
       "": "index",
-      "login": "login"
+      "logout": "logout"
     },
 
     index: function() {
       var route = this;
 
-      $.get('/session/username.json', function(data) {
-        if (data.username) {
-          var user = new User.Model({name: data.username});
+      $.get('/session/user_id', function(data) {
+        if (data.user_id) {
+
+          var user = new User.Model({_id: data.user_id});
+          user.fetch();
+
           var home = new Home.Model({user: user});
           var home_view = new Home.Views.Main({model: home});         
+
         } else {
-         window.location.replace('/login');
+
+          // Get /session/new then redirect back
+          $.get('/session/new', function(data) {
+            window.location = '/';
+          });
+
         }
       });
     },
 
-    login: function() {
-      var user = new User.Model();
-      var user_login_view = new User.Views.Login({model: user});
+    logout: function() {
+      $.get('/session/destroy', function(data) {
+            window.location = '/';
+      });
     }
   });
 

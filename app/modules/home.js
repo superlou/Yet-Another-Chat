@@ -42,9 +42,11 @@ function(namespace, Backbone, Room, User, home_tpl) {
 		},
 
 		initialize: function() {
-			_.bindAll(this,'render');
+			_.bindAll(this,'render', 'set_socket_username');
 
-			this.model.get('rooms').bind('add', this.append_room);
+			this.model.get('rooms').on('add', this.append_room);
+			this.model.get('user').on('change', this.render);
+			this.model.get('user').on('change', this.set_socket_username);
 
 			this.render();
 		},
@@ -59,8 +61,11 @@ function(namespace, Backbone, Room, User, home_tpl) {
 			});
 
 			return this;
-		}
+		},
 
+		set_socket_username: function() {
+			this.model.get('socket').emit('set_username', this.model.get('user').get('name'));
+		}
 	});
 
 	return Home;
