@@ -52,13 +52,22 @@ function(namespace, Backbone, Room, User, home_tpl) {
 		},
 
 		render: function() {
-			var template = _.template(home_tpl, {user: this.model.get('user')});
+			var template = _.template(home_tpl);
 			this.$el.html(template);
 
 			_.each(this.model.get('rooms').models, function(room) {
 				var view = new Room.Views.RoomRow({model: room});
 				$('#rooms_list').append(view.render().el);
+
+				if (room.get('is_open')) {
+					var windowed_view = new Room.Views.Windowed({model: room});
+					$('#content').append(windowed_view.render().el);
+					console.log('here');
+				}
 			});
+
+			var active_user = new User.Views.ActiveUser({model: this.model.get('user')});
+			$('#active_user').html(active_user.render().el);
 
 			return this;
 		},

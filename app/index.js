@@ -72,7 +72,7 @@ function(namespace, jQuery, Backbone, Io, Home, User) {
 
       $.get('/session/user_id', function(data) {
         if (data.user_id) {
-
+          
           var user = new User.Model({_id: data.user_id});
           user.fetch();
 

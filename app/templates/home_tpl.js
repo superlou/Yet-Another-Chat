@@ -4,7 +4,7 @@
 </div>
 
 <div id="sidebar">
-	<div>Welcome <%= user.get('name') %></div>
-	<div><a href="/logout">Logout</a></div>
+	<div id="active_user"></div>
+	<div><a href="/logout">New Session</a></div>
 	<div><ul id="rooms_list"></ul></div>
 </div>

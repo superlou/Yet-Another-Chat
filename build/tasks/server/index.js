@@ -139,6 +139,14 @@ task.registerHelper("server", function(options) {
 			});
 	});
 
+	site.put('/users/:id', function(req,res) {
+		var id = req.body._id;
+		delete req.body['_id'];
+		User.update({_id: id}, req.body, {}, function(err) {
+			if (err) { console.log(err); }
+		});
+	});
+
 	// Ensure all other routes go home for the client side app
 	site.get("*", function(req, res) {
 		fs.createReadStream(options.index).pipe(res);

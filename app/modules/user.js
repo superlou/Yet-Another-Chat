@@ -2,9 +2,10 @@ define([
 	"namespace",
 	"use!backbone",
 	"text!templates/user_login_tpl.html",
-	"text!templates/attendee_tpl.html"
+	"text!templates/attendee_tpl.html",
+	"text!templates/active_user_tpl.html"
 ],
-function(namespace, Backbone, user_login_tpl, attendee_tpl) {
+function(namespace, Backbone, user_login_tpl, attendee_tpl, active_user_tpl) {
 	var User = namespace.module();
 
 	User.Model = Backbone.Model.extend({
@@ -87,11 +88,31 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl) {
 	User.Views.ActiveUser = Backbone.View.extend({
 
 		initialize: function() {
-			_.bindAll(this,'render');			
+			_.bindAll(this,'render', 'edit_in_place', 'update_in_place');			
+		},
+
+		events: {
+			'click #active_username': 'edit_in_place'
+		},
+
+		edit_in_place: function() {
+			this.$el.find('#active_username').html(
+				'<input type="text" name="username" value="'+this.model.get('name')+'">'
+			);
+			this.$el.undelegate('#active_username', 'click');
+			this.$el.delegate('#active_username', 'keydown', this.update_in_place);
+		},
+
+		update_in_place: function(event_data) {
+			if (event_data.keyCode == 13) {
+				this.model.save({name: this.$el.find('#active_username input').val()});
+			}
 		},
 
 		render: function() {
-			
+			var template = _.template(active_user_tpl);
+			this.$el.html(template({user: this.model}));
+			return this;
 		}
 	});
 

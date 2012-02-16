@@ -107,9 +107,10 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 		className: "room-row",
 
 		events: {
-			"click a": "attend_room",
-			"change this": "update"
+			"click a": "attend_room"
 		},
+
+		full_room_view: null,
 
 		initialize: function() {
 			_.bindAll(this, 'render', 'attend_room', 'open_room');
@@ -137,14 +138,10 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 		},
 
 		open_room: function() {
-			var full_room_view = new Room.Views.Windowed({model: this.model});
+			full_room_view = new Room.Views.Windowed({model: this.model});
 			$('#content').append(full_room_view.render().el);
 			this.model.set({is_open: true});
 			this.model.listen_for_messages();
-		},
-
-		update: function() {
-			console.log('test');
 		}
 	});
 
@@ -157,7 +154,8 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 
 	    initialize: function() {
       		_.bindAll(this,'render','on_input_keydown', 'send_message','add_one_message',
-      					'scroll_to_bottom', 'reset_attendees', 'add_one_attendee');
+      					'scroll_to_bottom', 'reset_attendees', 'add_one_attendee',
+      					'update_visibility');
 
 			var message_collection = this.model.get('messages');
 			message_collection.bind('add', this.add_one_message, this);
@@ -167,13 +165,19 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 			attendee_collection.bind('add', this.add_one_attendee, this);
 			
 			var self = this;
+			this.update_visibility();
 			this.model.on('change', function() {
-				if (self.model.get('is_attended') == false) {
-					self.$el.hide();
-				} else {
-					self.$el.show();
-				}
+				self.update_visibility();
 			});
+	    },
+
+	    update_visibility: function()
+	    {
+			if (this.model.get('is_attended') == false) {
+				this.$el.hide();
+			} else {
+				this.$el.show();
+			}
 	    },
 
 	    render: function() {
@@ -184,6 +188,12 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 				railVisible: true,
 				start: 'bottom'
 			});
+
+			var self = this;
+			_.each(this.model.get('messages').models, function(message) {
+				self.add_one_message(message);
+			});
+
 			this.scroll_to_bottom();
 	    	return this;
 	    },
