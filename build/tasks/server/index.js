@@ -159,28 +159,33 @@ task.registerHelper("server", function(options) {
 		socket.on('enter_room', function(data) {
 			socket.join(data.room);
 
-			// Build a list of usernames in a room and send
-			var names = [];
-
-			_.each(io.sockets.clients(data.room), function(socket) {
-				socket.get('username', function(err, username) {
-					names.push(username);
-				});
-			});
-
-			socket.emit('attendee_list',{room_id: data.room, names: names});
-
 			// Notify everyone else in the room that someone has joined
-			socket.get('username', function(err, username) {
+			socket.get('user_id', function(err, user_id) {
 				socket.broadcast.to(data.room_id).emit(
-					'attendee_join', {room_id: data.room, name: username}
+					'attendee_join', {room_id: data.room, user_id: user_id}
 				);
 			});
 		});
 
+		socket.on('request_attendees', function(data) {
+			// Build a list of users in a room and send
+			var user_ids = [];
+
+			_.each(io.sockets.clients(data.room_id), function(socket) {
+				socket.get('user_id', function(err, user_id) {
+					user_ids.push(user_id);
+				});
+			});
+
+			socket.emit('attendee_list',{room_id: data.room_id, user_ids: user_ids});
+		});
+
+		socket.on('user_change', function(data) {
+		});
+
 		socket.on('disconnect', function() {
-			socket.get('username', function(err, username) {
-				io.sockets.emit('attendee_disconnect', {name: username});
+			socket.get('user_id', function(err, user_id) {
+				io.sockets.emit('attendee_disconnect', {user_id: user_id});
 			});
 		});
 
@@ -188,8 +193,8 @@ task.registerHelper("server", function(options) {
 			io.sockets.in(data.room_id).emit('room_message', data);
 		});
 
-		socket.on('set_username', function(data) {
-			socket.set('username', data);
+		socket.on('set_user_id', function(data) {
+			socket.set('user_id', data);
 		});
 	});
 

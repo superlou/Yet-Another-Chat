@@ -106,6 +106,8 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl, active_user_tpl) {
 		update_in_place: function(event_data) {
 			if (event_data.keyCode == 13) {
 				this.model.save({name: this.$el.find('#active_username input').val()});
+				var socket = io.connect(document.domain);
+				socket.emit('user_change', {user_id: this.model.get('_id')});
 			}
 		},
 

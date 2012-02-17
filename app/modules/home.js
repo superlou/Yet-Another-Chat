@@ -19,7 +19,7 @@ function(namespace, Backbone, Room, User, home_tpl) {
 		initialize: function() {
 			this.set({rooms: new Room.Collection()});
 			this.set({socket: io.connect(document.domain)});
-			this.get('socket').emit('set_username', this.get('user').get('name'));
+			this.get('socket').emit('set_user_id', this.get('user').get('_id'));
 
 			var room1 = new Room.Model({id: 'english', name: "English"});
 			var room2 = new Room.Model({id: 'japanese', name: "Japanese"});
@@ -62,7 +62,6 @@ function(namespace, Backbone, Room, User, home_tpl) {
 				if (room.get('is_open')) {
 					var windowed_view = new Room.Views.Windowed({model: room});
 					$('#content').append(windowed_view.render().el);
-					console.log('here');
 				}
 			});
 

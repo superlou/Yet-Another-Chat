@@ -36,7 +36,6 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 			this.set({socket: io.connect(socket_url)});
 
 			this.get('socket').emit('enter_room',{
-				user: 'guest', 
 				room: this.get('id')
 			});
 
@@ -57,8 +56,9 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
       			if (data.room_id === self.get('id')) {
 	      			var attendees = [];
 
-	      			_.each(data.names, function(username) {
-	      				var attendee = new User.Model({name: username});
+	      			_.each(data.user_ids, function(user_id) {
+	      				var attendee = new User.Model({_id: user_id});
+	      				attendee.fetch();
 	      				attendees.push(attendee);
 	      			})
 
@@ -68,15 +68,17 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 
       		this.get('socket').on('attendee_join', function(data) {
       			if (data.room_id === self.get('id')) {
-      				var attendee = new User.Model({name: data.name});
+      				var attendee = new User.Model({_id: data.user_id});
+      				attendee.fetch();
       				self.get('attendees').add(attendee);
       			}
       		});
 
       		this.get('socket').on('attendee_disconnect', function(data) {
   				var attendees_collection = self.get('attendees');
-  				var attendee = attendees_collection.find_by_name(data.name);
+  				var attendee = attendees_collection.get(data.user_id);
   				attendees_collection.remove(attendee);
+  				console.log('test');
       		});
 		},
 
@@ -110,8 +112,6 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 			"click a": "attend_room"
 		},
 
-		full_room_view: null,
-
 		initialize: function() {
 			_.bindAll(this, 'render', 'attend_room', 'open_room');
 
@@ -138,10 +138,10 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 		},
 
 		open_room: function() {
-			full_room_view = new Room.Views.Windowed({model: this.model});
+			this.model.listen_for_messages();
+			var full_room_view = new Room.Views.Windowed({model: this.model});
 			$('#content').append(full_room_view.render().el);
 			this.model.set({is_open: true});
-			this.model.listen_for_messages();
 		}
 	});
 
@@ -193,6 +193,10 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 			_.each(this.model.get('messages').models, function(message) {
 				self.add_one_message(message);
 			});
+
+			this.model.get('socket').emit(
+				'request_attendees', {room_id: self.model.get('id')}
+			);
 
 			this.scroll_to_bottom();
 	    	return this;
