@@ -186,10 +186,7 @@ task.registerHelper("server", function(options) {
 			
 			// Emit events asking users to trigger a change
 			_.each(rooms, function(room) {
-				//if (room[0] == "/")	{
-					//room = room.substring(1);
-					io.sockets.in(room).emit('user_changed',{user_id: data.user_id});
-				//}
+				io.sockets.in(room).emit('user_changed',{user_id: data.user_id});
 			});
 			
 		});

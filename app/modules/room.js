@@ -12,23 +12,21 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 	var Room = namespace.module();
 
 	Room.Model = Backbone.Model.extend({
-		defaults: {
+		defaults: function() { return {
 			id: 0,
 			name: "Default Room",
 			is_open: false,
 			is_attended: false,
 			needs_attention: false,
 			missed_message_count: 0,
-			messages: '',
+			messages: new Message.Collection(),
 			socket: '',
 			user: '',
-			attendees: ''
-		},
+			attendees: new User.Collection()
+		}},
 
 		initialize: function() {
 			_.bindAll(this,'listen_for_messages', 'read_messages');
-			this.set({messages: new Message.Collection()});
-			this.set({attendees: new User.Collection()});
 		},
 
 		listen_for_messages: function() {

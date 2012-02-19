@@ -10,14 +10,13 @@ function(namespace, Backbone, Room, User, home_tpl) {
 	var Home = namespace.module();
 
 	Home.Model = Backbone.Model.extend({
-		defaults: {
+		defaults: function() { return {
 			"user": new User.Model(),
-			"rooms": '',
+			"rooms": new Room.Collection(),
 			"socket": ''
-		},
+		}},
 
 		initialize: function() {
-			this.set({rooms: new Room.Collection()});
 			this.set({socket: io.connect(document.domain)});
 			this.get('socket').emit('set_user_id', this.get('user').get('_id'));
 
