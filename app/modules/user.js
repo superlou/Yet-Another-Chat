@@ -14,6 +14,17 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl, active_user_tpl) {
 
 		defaults: {
 			name: 'Guest'
+		},
+
+		initialize: function() {
+			var socket = io.connect(document.domain);
+
+			var self = this;
+			socket.on('user_changed', function(data) {
+				if (self.get('_id') == data.user_id) {
+					self.fetch();
+				}
+			});
 		}
 	});
 
@@ -70,8 +81,8 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl, active_user_tpl) {
 		initialize: function() {
 			_.bindAll(this,'render','unrender');
 
-			this.model.bind('change', this.render);
-			this.model.bind('remove', this.unrender);
+			this.model.on('change', this.render);
+			this.model.on('remove', this.unrender);
 		},
 
 		render: function() {
@@ -107,7 +118,7 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl, active_user_tpl) {
 			if (event_data.keyCode == 13) {
 				this.model.save({name: this.$el.find('#active_username input').val()});
 				var socket = io.connect(document.domain);
-				socket.emit('user_change', {user_id: this.model.get('_id')});
+				socket.emit('user_change',{user_id: this.model.get('_id')});
 			}
 		},
 

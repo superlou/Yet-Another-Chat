@@ -209,6 +209,7 @@ function(namespace, Backbone, Message, User, SlimScroll, room_tpl, room_row_tpl)
 	    },
 
 	    reset_attendees: function(attendees) {
+	    	this.$el.find('.attendees').html("");
 	    	var self = this;
 	    	_.each(attendees.models, function(attendee) {
 	    		self.add_one_attendee(attendee);

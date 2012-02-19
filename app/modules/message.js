@@ -24,6 +24,7 @@ function(namespace, Backbone, message_tpl) {
 
 		initialize: function() {
 			_.bindAll(this,'render');
+			this.model.on('change', 'render');
 		},
 
 		render: function() {

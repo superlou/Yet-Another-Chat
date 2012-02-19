@@ -181,6 +181,17 @@ task.registerHelper("server", function(options) {
 		});
 
 		socket.on('user_change', function(data) {
+			// Determine which rooms this user is in
+			var rooms = _.keys(socket.manager.rooms);
+			
+			// Emit events asking users to trigger a change
+			_.each(rooms, function(room) {
+				//if (room[0] == "/")	{
+					//room = room.substring(1);
+					io.sockets.in(room).emit('user_changed',{user_id: data.user_id});
+				//}
+			});
+			
 		});
 
 		socket.on('disconnect', function() {
