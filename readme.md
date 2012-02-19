@@ -3,7 +3,7 @@ Yet Another Chat App
 
 This is based on tbranyen's excellent [boiler-plate](https://github.com/tbranyen/backbone-boilerplate/tree/amd) for NodeJS/Backbone projects.  I suggest everybody use that so I can have more people to ask questions of.
 
-Last updated to "Unlinting... (also Linting...)" from 2/16/12, 9b1bfb091047199b80a20ae3c370884db7da2f24
+Last updated to "Added comment to jshint option" from 2/16/12, 8d39cab299cb5b8873bca9c70793573552f12537
 
 If someone knows a better way to merge in changes from another git project that's not really a fork, please let me know.
 
