@@ -50,13 +50,14 @@ function(namespace, jQuery, Backbone, Io, Home, User) {
     }
   });
 
+  // Shorthand the application namespace
+  var app = namespace.app;  
+
   // Treat the jQuery ready function as the entry point to the application.
   // Inside this function, kick-off all initialization, everything up to this
   // point should be definitions.
   jQuery(function($) {
-    // Shorthand the application namespace
-    var app = namespace.app;
-    
+
     // Define your master router on the application namespace and trigger all
     // navigation from this instance.
     app.router = new Router();
@@ -73,7 +74,9 @@ function(namespace, jQuery, Backbone, Io, Home, User) {
       var protocol = this.protocol + "//";
 
       // Ensure the protocol is not part of URL, meaning its relative.
-      if (href && href.slice(0, protocol.length) !== protocol) {
+      if (href && href.slice(0, protocol.length) !== protocol
+        && href.indexOf("javascript:") !== 0) {
+          
         // Stop the default event to ensure the link will not cause a page
         // refresh.
         evt.preventDefault();
