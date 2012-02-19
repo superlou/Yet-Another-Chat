@@ -3,7 +3,7 @@ Yet Another Chat App
 
 This is based on tbranyen's excellent [boiler-plate](https://github.com/tbranyen/backbone-boilerplate/tree/amd) for NodeJS/Backbone projects.  I suggest everybody use that so I can have more people to ask questions of.
 
-Last updated to "fix scoping of app shortcut..." from 2/16/12, dd3a96e12ed08b68a5e986e76e4381b31175d751
+Last updated to "Unlinting... (also Linting...)" from 2/16/12, 9b1bfb091047199b80a20ae3c370884db7da2f24
 
 If someone knows a better way to merge in changes from another git project that's not really a fork, please let me know.
 
