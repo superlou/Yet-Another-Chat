@@ -18,8 +18,6 @@ task.registerTask("server", "Run development server.", function(prop) {
 		host: "127.0.0.1"
 	});
 
-	console.log(props);
-
 	// HACK TO IDENTIFY BLUEHOST HOST IP
 	if (props[1] === "bluehost") {
 		options.host = "69.195.121.203";
