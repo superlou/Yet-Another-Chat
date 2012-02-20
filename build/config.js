@@ -106,7 +106,6 @@ config.init({
         "assets/css": "dist/release"
       }
     }
-
   },
 
   // This task uses James Burke's excellent r.js AMD build tool.  In the future

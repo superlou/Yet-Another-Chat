@@ -4,14 +4,13 @@ require([
   // Libs
   "jquery",
   "use!backbone",
-  "io",
 
   // Modules
   "modules/home",
   "modules/user"
 ],
 
-function(namespace, jQuery, Backbone, Io, Home, User) {
+function(namespace, jQuery, Backbone, Home, User) {
   
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
@@ -22,6 +21,7 @@ function(namespace, jQuery, Backbone, Io, Home, User) {
 
     index: function() {
       var route = this;
+      //console.log(Io);
 
       $.get('/session/user_id', function(data) {
         if (data.user_id) {

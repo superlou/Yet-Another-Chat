@@ -1,11 +1,12 @@
 define([
 	"namespace",
 	"use!backbone",
+	"use!io",
 	"text!templates/user_login_tpl.html",
 	"text!templates/attendee_tpl.html",
 	"text!templates/active_user_tpl.html"
 ],
-function(namespace, Backbone, user_login_tpl, attendee_tpl, active_user_tpl) {
+function(namespace, Backbone, io, user_login_tpl, attendee_tpl, active_user_tpl) {
 	var User = namespace.module();
 
 	User.Model = Backbone.Model.extend({
@@ -75,7 +76,7 @@ function(namespace, Backbone, user_login_tpl, attendee_tpl, active_user_tpl) {
 	});
 
 	User.Views.Attendee = Backbone.View.extend({
-		class: 'attendee',
+		className: 'attendee',
 		template: "app/templates/attendee_tpl.html",
 
 		initialize: function() {

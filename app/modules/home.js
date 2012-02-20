@@ -3,7 +3,7 @@ define([
 	"use!backbone",
 	"modules/room",
 	"modules/user",
-	"text!templates/home_tpl.js"
+	"text!templates/home_tpl.html"
 ],
 
 function(namespace, Backbone, Room, User, home_tpl) {
@@ -14,7 +14,7 @@ function(namespace, Backbone, Room, User, home_tpl) {
 			"user": new User.Model(),
 			"rooms": new Room.Collection(),
 			"socket": ''
-		}},
+		}; },
 
 		initialize: function() {
 			this.set({socket: io.connect(document.domain)});

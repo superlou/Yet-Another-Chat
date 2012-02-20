@@ -3,7 +3,7 @@
 // ============================================================================
 
 task.registerTask("server", "Run development server.", function(prop) {
- var props = ["server"];
+ 	var props = ["server"];
 	// If a prop was passed as the argument, use that sub-property of server.
 	if (prop) { props.push(prop); }
 
@@ -17,6 +17,11 @@ task.registerTask("server", "Run development server.", function(prop) {
 		port: 8080,
 		host: "127.0.0.1"
 	});
+
+	// HACK TO IDENTIFY BLUEHOST HOST IP
+	if (props[1] === "bluehost") {
+		options.host = "69.195.121.203";
+	}
 
 	options.folders = options.folders || {};
 
@@ -52,7 +57,6 @@ task.registerHelper("server", function(options) {
 	var _ = require('underscore')._;
 	var fs = require("fs");
 	var express = require("express");
-	var namer = require("./namer");
 	var async = require("async");
 
 	var site = express.createServer();
@@ -99,112 +103,13 @@ task.registerHelper("server", function(options) {
 	// Serve favicon.ico
 	site.use(express.favicon(options.favicon));
 
-	// Handle client-helper routes
-	site.get('/session/new', function(req, res) {
-		// Generate a unique, random nickname for this unregistered user
-		var name_is_unique = false;
-		var name = namer.generate();	// @todo make sure the name is unique
-
-		// Log this unregistered user in the users collection
-		var user = new User();
-		user.name = name;
-		user.registered = false;
-		user.save();
-
-		// Store user_id in session
-		req.session.user_id = user._id;
-
-		// Respond with user_id
-		res.json({user: user});
-	});
-
-	site.get('/session/destroy', function(req, res) {
-		req.session.destroy();
-		res.json({});
-	});
-
-	site.get('/session/user_id', function(req,res) {
-		res.json({user_id: req.session.user_id});
-	});
-
-	site.get('/users/:id', function(req,res) {
-		async.series([
-			function(cb) {
-				User.find({_id: req.params.id}, function(err, docs) {
-					cb(err, docs);
-				})
-			}
-			], function(err, results) {
-				res.json(results[0][0]);
-			});
-	});
-
-	site.put('/users/:id', function(req,res) {
-		var id = req.body._id;
-		delete req.body['_id'];
-		User.update({_id: id}, req.body, {}, function(err) {
-			if (err) { console.log(err); }
-		});
-	});
-
-	// Ensure all other routes go home for the client side app
-	site.get("*", function(req, res) {
-		fs.createReadStream(options.index).pipe(res);
-	});
+	var routes = require('./routes');
+	routes.route(site,options,fs,User);
 	
 	// Get ready for sockets
 	var io = require('socket.io').listen(site);
-
-	io.sockets.on('connection', function(socket) {
-		socket.on('enter_room', function(data) {
-			socket.join(data.room);
-
-			// Notify everyone else in the room that someone has joined
-			socket.get('user_id', function(err, user_id) {
-				socket.broadcast.to(data.room_id).emit(
-					'attendee_join', {room_id: data.room, user_id: user_id}
-				);
-			});
-		});
-
-		socket.on('request_attendees', function(data) {
-			// Build a list of users in a room and send
-			var user_ids = [];
-
-			_.each(io.sockets.clients(data.room_id), function(socket) {
-				socket.get('user_id', function(err, user_id) {
-					user_ids.push(user_id);
-				});
-			});
-
-			socket.emit('attendee_list',{room_id: data.room_id, user_ids: user_ids});
-		});
-
-		socket.on('user_change', function(data) {
-			// Determine which rooms this user is in
-			var rooms = _.keys(socket.manager.rooms);
-			
-			// Emit events asking users to trigger a change
-			_.each(rooms, function(room) {
-				io.sockets.in(room).emit('user_changed',{user_id: data.user_id});
-			});
-			
-		});
-
-		socket.on('disconnect', function() {
-			socket.get('user_id', function(err, user_id) {
-				io.sockets.emit('attendee_disconnect', {user_id: user_id});
-			});
-		});
-
-		socket.on('user_message', function(data) {
-			io.sockets.in(data.room_id).emit('room_message', data);
-		});
-
-		socket.on('set_user_id', function(data) {
-			socket.set('user_id', data);
-		});
-	});
+	var socket_handler = require('./socketio_handler');
+	socket_handler.apply_to(io);
 
 	// Actually listen
 	site.listen(options.port, options.host);

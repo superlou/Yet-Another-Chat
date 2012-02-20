@@ -14,7 +14,7 @@ require.config({
     backbone: "../assets/js/libs/backbone",
     layout: "../assets/js/libs/jquery.layout.min",
     ui: "../assets/js/libs/jquery-ui",
-    io: "/socket.io/socket.io",
+    io: "../assets/js/libs/socket.io",
     slimscroll: "../assets/js/libs/slimScroll",
 
     // Shim Plugin
@@ -44,6 +44,10 @@ require.config({
 
     ui: {
       deps: ["jquery"]
+    },
+
+    io: {
+      attach: "io"
     }
   }
 });
